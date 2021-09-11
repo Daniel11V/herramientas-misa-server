@@ -9,10 +9,15 @@ readingsCtrl.getReadings = async (req, res) => {
 
 readingsCtrl.updateReadings = async (req, res) => {
     const { gospel, first_readings } = req.body;
-    const newReadings = { gospel, first_readings };
     const readings = await Readings.find();
-    await Readings.findByIdAndUpdate(readings[0]._id, newReadings);
-    res.json({ status: 'Reading Updated' });
+    if (readings[0]) {
+        await Readings.findOneAndUpdate(readings[0]._id, { gospel, first_readings });
+        res.json({ status: 'Readings Updated' });
+    } else {
+        const newReadings = new Readings({ gospel, first_readings });
+        await newReadings.save();
+        res.json({ status: 'Readings Saved' });
+    }
 };
 
 module.exports = readingsCtrl;
