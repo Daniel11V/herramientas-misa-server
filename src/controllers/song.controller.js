@@ -1,8 +1,13 @@
 const Song = require('../models/song');
+const getTopSongs = require('../functions/getTopSongs');
+
 
 const songCtrl = {};
 
 songCtrl.getSongs = async (req, res) => {
+    const topSongs = await getTopSongs('EvDom');
+    // console.log('getTopSongs("EvDom"): ', topSongs);
+
     const songs = await Song.find();
     res.json(songs);
 };

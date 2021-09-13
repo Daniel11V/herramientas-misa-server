@@ -1,4 +1,5 @@
 const Readings = require('../models/readings');
+const getTopSongs = require('../functions/getTopSongs');
 
 const readingsCtrl = {};
 
@@ -8,16 +9,23 @@ readingsCtrl.getReadings = async (req, res) => {
 };
 
 readingsCtrl.updateReadings = async (req, res) => {
-    const { gospel, first_readings } = req.body;
-    const readings = await Readings.find();
-    if (readings[0]) {
-        await Readings.findOneAndUpdate(readings[0]._id, { gospel, first_readings });
-        res.json({ status: 'Readings Updated' });
-    } else {
-        const newReadings = new Readings({ gospel, first_readings });
-        await newReadings.save();
-        res.json({ status: 'Readings Saved' });
-    }
+    const { base, gospel } = req.body;
+
+    const topSongs = getTopSongs(base, gospel);
+
+    res.json(topSongs);
+
+    // save readings
+
+    // const readings = await Readings.find();
+    // if (readings[0]) {
+    //     await Readings.findOneAndUpdate(readings[0]._id, { base, gospel });
+    //     res.json({ status: 'Readings Updated' });
+    // } else {
+    //     const newReadings = new Readings({ base, gospel });
+    //     await newReadings.save();
+    //     res.json({ status: 'Readings Saved' });
+    // }
 };
 
 module.exports = readingsCtrl;
