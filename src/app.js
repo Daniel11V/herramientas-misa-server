@@ -11,7 +11,7 @@ app.use(express.json());  // Allow json format
 
 // Routes
 app.use('/api/songs', require('./routes/song.route'));
-app.use('/api/readings', require('./routes/readings.route'));
+app.use('/api/suggestion', require('./routes/suggestion.route'));
 
 // Static files
 // app.use(express.static(path.join(__dirname, 'public')));

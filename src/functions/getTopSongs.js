@@ -1,6 +1,48 @@
 const Song = require('../models/song');
+const cheerio = require('cheerio');
+const axios = require('axios');
 
-getTopSongs = async (base, gospel) => {
+async function getGospel(base, input) {
+    let gospel = null;
+
+    if (base === 'EvInput') {
+        gospel = input.trim().toLowerCase();;
+    } else {
+        let day;
+        if (base === 'EvDom') {
+            day = 'evangelio-del-domingo';
+        } else {
+            day = 'evangelio-del-dia';
+        }
+
+        try {
+            const { data } = await axios.get(`https://www.ciudadredonda.org/calendario-lecturas/${day}`);
+            const $ = cheerio.load(data);
+            $('.lecturas section').each((i, select) => {
+                let type = $(select).find('h2').text().trim().toLowerCase();
+                let number = $(select).find('.texto_palabra b').first().text().trim().toLowerCase();
+                $(select).find('.texto_palabra b').remove();
+                let text = $(select).find('.texto_palabra').remove('b').text().trim().toLowerCase();
+
+                // console.log('----------------------------------------');
+                // console.log('A:\n', type);
+                // console.log('AA:\n', number);
+                // console.log('AAA:\n', text);
+
+                if (type.includes('evangelio')) {
+                    // console.log(25, text);
+                    gospel = text;
+                }
+            });
+        } catch (err) {
+            console.error(err);
+        }
+
+        return gospel;
+    }
+}
+
+getTopSongs = async (base, input) => {
     const allSongs = await Song.find();
 
     // Depurar canciones
@@ -52,9 +94,53 @@ getTopSongs = async (base, gospel) => {
             })
         });
     }
-
     // console.log('onlySong: ', onlySong);
+
+
+
+    // Find/Set Gospel    
+    const gospel = await getGospel(base, input);
+
+    // Gospel About
+    let gospelWords = gospel;
+    gospelWords = gospelWords.replace("\n", "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z ]/g, "").trim().split(" ");
+    const labels = {
+        maria: ['maria', 'madre'],
+        padre: ['padre', 'creador'],
+        jesus: ['jesus', 'maestro', 'discipulo', 'hijo', 'mesias', 'salvador'],
+        espiritu_santo: ['espiritu', 'sopla', 'fuego', 'paloma', 'santo']
+    }
+    const conectors = ['y', 'en', 'donde', 'de', 'del', 'a', 'sus', 'se', 'no', 'que', 'les', 'ser', 'lo', 'los', 'el', 'mi', 'me', 'al'];
+    let gospelLabels = {};
+
+    for (const person in labels) {
+        for (const name of labels[person]) {
+            if (gospelWords.includes(name)) {
+                console.log('Incluye: ', name);
+                if (gospelLabels[person]) {
+                    gospelLabels[person] = gospelLabels[person] + 1;
+                } else {
+                    gospelLabels[person] = 1;
+                }
+            }
+        }
+    }
+
+    for (let i = 0; i < gospelWords.length; i++) {
+        if (gospelWords[i].length > 2 && conectors.indexOf(gospelWords[i]) < 0) {
+            let currentWordCount = gospelLabels[gospelWords[i]];
+            let count = currentWordCount ? currentWordCount : 0;
+            gospelLabels[gospelWords[i]] = count + 1;
+        }
+    }
+    console.log(gospelLabels);
+
+
     // Find Top Songs
+
+
+
+
     const topSongs = [];
 
     return topSongs;
