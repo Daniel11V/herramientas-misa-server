@@ -9,9 +9,9 @@ songCtrl.getSongs = async (req, res) => {
 };
 
 songCtrl.saveSong = async (req, res) => {
-    const { title, lyric, author, creator, topics, labels, rating } = req.body;
+    const { title, lyric, author, creator, labels, rating } = req.body;
     if (title && lyric) {
-        const song = new Song({ title, lyric, author, creator, topics, labels, rating });
+        const song = new Song({ title, lyric, author, creator, labels, rating });
         await song.save();
         res.json({ status: 'Song Saved' });
     } else {
@@ -25,8 +25,8 @@ songCtrl.getSong = async (req, res) => {
 };
 
 songCtrl.updateSong = async (req, res) => {
-    const { title, lyric, author, creator, topics, labels, rating } = req.body;
-    const newSong = { title, lyric, author, creator, topics, labels, rating };
+    const { title, lyric, author, creator, labels, rating } = req.body;
+    const newSong = { title, lyric, author, creator, labels, rating };
     await Song.findByIdAndUpdate(req.params.id, newSong);
     res.json({ status: 'Song Updated' });
 };
