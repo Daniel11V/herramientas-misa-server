@@ -1,17 +1,14 @@
-const Song = require('../models/song');
+import Song from '../models/song.js';
 
-
-const songCtrl = {};
-
-songCtrl.getSongs = async (req, res) => {
+export const getSongs = async (req, res) => {
     const songs = await Song.find();
     res.json(songs);
 };
 
-songCtrl.saveSong = async (req, res) => {
-    const { title, lyric, author, creator, labels, rating } = req.body;
+export const saveSong = async (req, res) => {
+    const { title, lyric, author, creator, chords, pulse, tempo, labels, rating } = req.body;
     if (title && lyric) {
-        const song = new Song({ title, lyric, author, creator, labels, rating });
+        const song = new Song({ title, lyric, author, creator, chords, pulse, tempo, labels, rating });
         await song.save();
         res.json({ status: 'Song Saved' });
     } else {
@@ -19,22 +16,20 @@ songCtrl.saveSong = async (req, res) => {
     }
 };
 
-songCtrl.getSong = async (req, res) => {
+export const getSong = async (req, res) => {
     const song = await Song.findById(req.params.id);
     res.json(song);
 };
 
-songCtrl.updateSong = async (req, res) => {
-    const { title, lyric, author, creator, labels, rating } = req.body;
-    const newSong = { title, lyric, author, creator, labels, rating };
+export const updateSong = async (req, res) => {
+    const { title, lyric, author, creator, chords, pulse, tempo, labels, rating } = req.body;
+    const newSong = { title, lyric, author, creator, chords, pulse, tempo, labels, rating };
     await Song.findByIdAndUpdate(req.params.id, newSong);
     res.json({ status: 'Song Updated' });
 };
 
-songCtrl.deleteSong = async (req, res) => {
+export const deleteSong = async (req, res) => {
     await Song.findByIdAndRemove(req.params.id);
     res.json({ status: 'Song Deleted' });
 };
-
-module.exports = songCtrl;
 

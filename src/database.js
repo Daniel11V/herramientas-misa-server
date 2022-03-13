@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const URI = (process.env.MONGODB_URI ||
     process.env.MONGODB_URI_LOCAL);
@@ -9,4 +9,4 @@ mongoose.connect(URI, {
     .then(db => console.log('DB is connected'))
     .catch(err => console.error(err));
 
-module.exports = mongoose;
+export default mongoose;

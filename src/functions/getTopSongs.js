@@ -1,8 +1,8 @@
-const Song = require('../models/song');
-const cheerio = require('cheerio');
-const axios = require('axios');
+import Song from '../models/song.js';
+import cheerio from 'cheerio';
+import axios from 'axios';
 
-async function getGospel(base, input) {
+const getGospel = async (base, input) => {
     let gospel = null;
 
     if (base === 'EvInput') {
@@ -42,7 +42,7 @@ async function getGospel(base, input) {
     }
 }
 
-getTopSongs = async (base, input) => {
+const getTopSongs = async (base, input) => {
     const allSongs = await Song.find();
 
     // Depurar canciones
@@ -81,11 +81,6 @@ getTopSongs = async (base, input) => {
                     }
                 }
 
-                // if (p == '  DO  FA    SOL DO   ') {
-                //     console.log('p: ', p);
-                //     console.log('counter: ', counter);
-                // }
-
                 if (counter >= 3) {
                     return false;
                 } else {
@@ -108,9 +103,9 @@ getTopSongs = async (base, input) => {
         maria: ['maria', 'madre'],
         padre: ['padre', 'creador'],
         jesus: ['jesus', 'maestro', 'discipulo', 'hijo', 'mesias', 'salvador'],
-        espiritu_santo: ['espiritu', 'sopla', 'fuego', 'paloma', 'santo']
+        espiritu_santo: ['espiritu', 'soplo', 'sopla', 'viento', 'fuego', 'paloma', 'santo']
     }
-    const conectors = ['y', 'en', 'donde', 'de', 'del', 'a', 'sus', 'se', 'no', 'que', 'les', 'ser', 'lo', 'los', 'el', 'mi', 'me', 'al'];
+    const conectors = ['a', 'al', 'aquel', 'donde', 'dice', 'dijo', 'de', 'del', 'con', 'en', 'el', 'esta', 'les', 'lo', 'los', 'las', 'mas', 'mi', 'me', 'no', 'para', 'pues', 'porque', 'que', 'sus', 'se', 'ser', 'sea', 'sin', 'uno', 'una', 'y'];
     let gospelLabels = {};
 
     for (const person in labels) {
@@ -126,13 +121,16 @@ getTopSongs = async (base, input) => {
         }
     }
 
-    for (let i = 0; i < gospelWords.length; i++) {
-        if (gospelWords[i].length > 2 && conectors.indexOf(gospelWords[i]) < 0) {
-            let currentWordCount = gospelLabels[gospelWords[i]];
-            let count = currentWordCount ? currentWordCount : 0;
-            gospelLabels[gospelWords[i]] = count + 1;
-        }
-    }
+
+    // Todas las palabras
+
+    // for (let i = 0; i < gospelWords.length; i++) {
+    //     if (gospelWords[i].length > 2 && conectors.indexOf(gospelWords[i]) < 0) {
+    //         let currentWordCount = gospelLabels[gospelWords[i]];
+    //         let count = currentWordCount ? currentWordCount : 0;
+    //         gospelLabels[gospelWords[i]] = count + 1;
+    //     }
+    // }
     console.log(gospelLabels);
 
 
@@ -146,4 +144,4 @@ getTopSongs = async (base, input) => {
     return topSongs;
 }
 
-module.exports = getTopSongs;
+export default getTopSongs;

@@ -1,7 +1,7 @@
-const { Router } = require('express');
+import { Router } from 'express';
 const router = Router();
 
-const { getSongs, saveSong, getSong, updateSong, deleteSong } = require('../controllers/song.controller');
+import { getSongs, saveSong, getSong, updateSong, deleteSong } from '../controllers/song.controller.js';
 
 router.route('/')
     .get(getSongs)
@@ -12,4 +12,4 @@ router.route('/:id')
     .put(updateSong)
     .delete(deleteSong);
 
-module.exports = router;
+export default router;

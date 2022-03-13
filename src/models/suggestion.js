@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const SuggestionSchema = new Schema({
     base: { type: String, required: false, default: 'EvDom' },
@@ -6,4 +7,4 @@ const SuggestionSchema = new Schema({
     first_readings: { type: Boolean, required: false, default: true }
 });
 
-module.exports = model('Suggestion', SuggestionSchema);
+export default model('Suggestion', SuggestionSchema);

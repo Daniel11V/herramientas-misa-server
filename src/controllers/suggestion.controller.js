@@ -1,14 +1,12 @@
-const Suggestion = require('../models/suggestion');
-const getTopSongs = require('../functions/getTopSongs');
+import Suggestion from '../models/suggestion.js';
+import getTopSongs from '../functions/getTopSongs.js';
 
-const suggestionCtrl = {};
-
-suggestionCtrl.getSuggestion = async (req, res) => {
+export const getSuggestion = async (req, res) => {
     const suggestion = await Suggestion.find();
     res.json(suggestion);
 };
 
-suggestionCtrl.updateSuggestion = async (req, res) => {
+export const updateSuggestion = async (req, res) => {
     const { base, input } = req.body;
 
     const topSongs = getTopSongs(base, input);
@@ -27,5 +25,3 @@ suggestionCtrl.updateSuggestion = async (req, res) => {
     //     res.json({ status: 'Suggestion Saved' });
     // }
 };
-
-module.exports = suggestionCtrl;

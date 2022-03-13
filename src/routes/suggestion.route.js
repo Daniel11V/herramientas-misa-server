@@ -1,10 +1,10 @@
-const { Router } = require('express');
+import { Router } from 'express';
 const router = Router();
 
-const { getSuggestion, updateSuggestion } = require('../controllers/suggestion.controller');
+import { getSuggestion, updateSuggestion } from '../controllers/suggestion.controller.js';
 
 router.route('/')
     .get(getSuggestion)
     .post(updateSuggestion);
 
-module.exports = router;
+export default router;
